@@ -33,7 +33,7 @@ There are a series of available environment variables:
 | -------------------- | -------------------------------------------------------------------- | -------------- |
 | `BEASTHOST`          | Required. IP/Hostname of a Mode-S/BEAST provider (dump1090/readsb)   |                |
 | `BEASTPORT`          | Optional. TCP port number of Mode-S/BEAST provider (dump1090/readsy) | 30005          |
-| `SMUSERNAME`         | Required. SDR Map `yourusername`                                     |                |
+| `SMUSERNAME`         | Required. SDR Map                                                    | `yourusername` |
 | `SMPASSWORD`         | Required. SDR Map Password                                           | `yourpassword` |
 | `READSB_LAT`         | Required. Latitude of the antenna                                    |                |
 | `READSB_LON`         | Required. Longitude of the antenna                                   |                |
