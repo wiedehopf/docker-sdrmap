@@ -6,8 +6,6 @@
 FROM ghcr.io/sdr-enthusiasts/docker-baseimage:wreadsb
 
 ENV BEASTPORT=30005 \
-    GZIP_LVL=3 \
-    CHUNK_SIZE=60 \
     SMUSERNAME=yourusername \
     SMPASSWORD=yourpassword
 
