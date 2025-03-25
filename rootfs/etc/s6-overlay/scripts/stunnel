@@ -3,4 +3,5 @@
 
 source /scripts/common
 
+echo "Starting stunnel"
 exec "${s6wrap[@]}" stunnel /etc/stunnel/stunnel.conf
