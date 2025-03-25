@@ -10,6 +10,9 @@ ADSBPATH="/run/readsb/aircraft.json"
 # sysinfolastrun=0
 # radiosondelastrun=0
 
+# wait for readsb to be ready
+sleep 5
+
 
 if [[ -z $SMUSERNAME ]] || [[ -z $SMPASSWORD ]] || [[ $SMUSERNAME == "yourusername" ]] || [[ $SMPASSWORD == "yourpassword" ]]; then
 	echo "Please edit your credentials."

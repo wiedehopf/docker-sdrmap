@@ -7,7 +7,8 @@ FROM ghcr.io/sdr-enthusiasts/docker-baseimage:wreadsb
 
 ENV BEASTPORT=30005 \
     SMUSERNAME=yourusername \
-    SMPASSWORD=yourpassword
+    SMPASSWORD=yourpassword \
+    MLAT=false
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -17,6 +18,7 @@ RUN set -x && \
     KEPT_PACKAGES=() && \
     KEPT_PACKAGES+=(gzip) && \
     KEPT_PACKAGES+=(curl) && \
+    KEPT_PACKAGES+=(stunnel4) && \
     # install packages
     apt-get update && \
     apt-get install -y --no-install-suggests --no-install-recommends \

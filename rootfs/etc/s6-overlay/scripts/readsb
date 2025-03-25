@@ -27,14 +27,6 @@ elif [ -n "${READSB_LON}" ]; then
     READSB_CMD+=(--lon "${READSB_LON}")
 fi
 
-# if [ -n "${MLATHOST}" ]; then
-#     READSB_CMD+=("--net-connector=${MLATHOST},${MLATPORT},beast_in")
-# fi
-
-# if [ -n "${BEASTHOST}" ]; then
-#     READSB_CMD+=("--net-connector=${BEASTHOST},${BEASTPORT},beast_in")
-# fi
-
 READSB_CMD+=("--write-json=/run/readsb")
 # no need to write state when tar1090_disable is used for a minimal setup
 
@@ -44,25 +36,12 @@ READSB_CMD+=("--json-reliable=1")
 # READSB_CMD+=("--net-ro-port=30002")
 # READSB_CMD+=("--net-sbs-port=30003")
 # READSB_CMD+=("--net-bi-port=30004,30104")
-# READSB_CMD+=("--net-bo-port=30005")
+READSB_CMD+=("--net-bo-port=30005")
 # READSB_CMD+=("--net-beast-reduce-out-port=30006")
 # READSB_CMD+=("--net-json-port=30047")
 
-# READSB_CMD+=(--forward-mlat)
 READSB_CMD+=(--net-sbs-in-port=32006)
 
-# if chk_enabled "${READSB_FORWARD_MLAT}"; then
-#     "${s6wrap[@]}" echo "WARNING -- READSB_FORWARD_MLAT has been set! Do not feed the output of this container to any aggregators!"
-#     READSB_CMD+=("--forward-mlat")
-# fi
-
-# if chk_enabled "${READSB_FORWARD_MLAT_SBS}"; then
-#     "${s6wrap[@]}" echo "WARNING -- READSB_FORWARD_MLAT_SBS has been set! Do not feed the SBS (BaseStation) output of this container to any aggregators!"
-#     READSB_CMD+=("--forward-mlat-sbs")
-# elif chk_enabled "${READSB_FORWARD_MLAT}"; then
-#     "${s6wrap[@]}" echo "WARNING -- READSB_FORWARD_MLAT_SBS has been set! Do not feed the SBS (BaseStation) output of this container to any aggregators!"
-#     READSB_CMD+=("--forward-mlat-sbs")
-# fi
 
 READSB_CMD+=("--net-connector=${BEASTHOST},${BEASTPORT},beast_in")
 
@@ -88,11 +67,7 @@ if [[ -n "$READSB_MAX_RANGE" ]]; then
     READSB_CMD+=("--max-range=$READSB_MAX_RANGE")
 fi
 
-# Handle "--mlat"
-#shellcheck disable=SC2153
-# if chk_enabled "$READSB_MLAT"; then
-#     READSB_CMD+=("--mlat")
-# fi
+READSB_CMD+=("--mlat")
 
 # Handle "--modeac"
 if chk_enabled "$READSB_MODEAC"; then

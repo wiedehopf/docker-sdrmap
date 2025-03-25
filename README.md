@@ -25,19 +25,31 @@ services:
       - SMPASSWORD=yourpassword
 ```
 
+## MLAT
+
+If you want to enable MLAT, you need to set the `MLAT` environment variable to `true`. You also need to set the `ALT` environment variable to the altitude of your antenna in meters. For example, if your antenna is 10 meters above sea level, you would set `ALT=10`. Both `MLAT` and `ALT` need to be set for MLAT to work.
+
+You will want your instance of ultrafeeder to take in these results. Add in the following to the `ULTRAFEEDER_CONFIG` section of ultrafeeder
+
+```yaml
+mlathub,sdrmap,30105,beast_in;
+```
+
 ## Runtime Environment Variables
 
 There are a series of available environment variables:
 
-| Environment Variable | Purpose                                                              | Default        |
-| -------------------- | -------------------------------------------------------------------- | -------------- |
-| `BEASTHOST`          | Required. IP/Hostname of a Mode-S/BEAST provider (dump1090/readsb)   |                |
-| `BEASTPORT`          | Optional. TCP port number of Mode-S/BEAST provider (dump1090/readsy) | 30005          |
-| `SMUSERNAME`         | Required. SDR Map                                                    | `yourusername` |
-| `SMPASSWORD`         | Required. SDR Map Password                                           | `yourpassword` |
-| `READSB_LAT`         | Required. Latitude of the antenna                                    |                |
-| `READSB_LON`         | Required. Longitude of the antenna                                   |                |
-| `TZ`                 | Optional. Your local timezone                                        | GMT            |
+| Environment Variable | Purpose                                                                               | Default        |
+| -------------------- | ------------------------------------------------------------------------------------- | -------------- |
+| `BEASTHOST`          | Required. IP/Hostname of a Mode-S/BEAST provider (dump1090/readsb)                    |                |
+| `BEASTPORT`          | Optional. TCP port number of Mode-S/BEAST provider (dump1090/readsy)                  | 30005          |
+| `SMUSERNAME`         | Required. SDR Map                                                                     | `yourusername` |
+| `SMPASSWORD`         | Required. SDR Map Password                                                            | `yourpassword` |
+| `READSB_LAT`         | Required. Latitude of the antenna                                                     |                |
+| `READSB_LON`         | Required. Longitude of the antenna                                                    |                |
+| `ALT`                | For MLAT set the altitude in **_meters_**. No trailing `m` or other values necessary. | Unset          |
+| `TZ`                 | Optional. Your local timezone                                                         | GMT            |
+| `MLAT`               | Optional. Enable MLAT (true/false)                                                    | false          |
 
 ## Ports
 
