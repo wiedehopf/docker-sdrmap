@@ -25,6 +25,16 @@ services:
       - SMPASSWORD=yourpassword
 ```
 
+## MLAT
+
+If you want to enable MLAT, you need to set the `MLAT` environment variable to `true`. You also need to set the `ALT` environment variable to the altitude of your antenna in meters. For example, if your antenna is 10 meters above sea level, you would set `ALT=10`. Both `MLAT` and `ALT` need to be set for MLAT to work.
+
+You will want your instance of ultrafeeder to take in these results. Add in the following to the `ULTRAFEEDER_CONFIG` section of ultrafeeder
+
+```yaml
+mlathub,sdrmap,30105,beast_in;
+```
+
 ## Runtime Environment Variables
 
 There are a series of available environment variables:
