@@ -68,15 +68,16 @@ ARGS+=("--alt" "$ALT")
 ARGS+=("--input-type" "$INPUT_TYPE")
 ARGS+=("--input-connect" "$INPUT_HOSTPORT")
 ARGS+=("--server" "$SERVER_HOSTPORT")
+ARGS+=("--results" "127.0.0.1:30004")
 
 if [ -n "$badconfig" ]; then
 	echo "Not starting mlat-client-sdrmap, missing configuration options ($badconfig)" >&2
-	exit 64
+	sleep infinity
 fi
 
 if [[ "$SERVER_USER" != *:* ]]; then
 	echo "Your credentials seem to be wrong." >&2
-	exit 64
+	sleep infinity
 fi
 
 echo "Starting mlat-client-sdrmap with ${ARGS[*]}"
