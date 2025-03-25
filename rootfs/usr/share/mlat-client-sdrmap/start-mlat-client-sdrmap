@@ -64,7 +64,7 @@ ARGS+=("--alt" "$ALT")
 ARGS+=("--input-type" "$INPUT_TYPE")
 ARGS+=("--input-connect" "$INPUT_HOSTPORT")
 ARGS+=("--server" "$SERVER_HOSTPORT")
-ARGS+=("--results" "127.0.0.1:30004")
+ARGS+=("--results" "127.0.0.1:30104")
 
 if [ -n "$badconfig" ]; then
 	echo "Not starting mlat-client-sdrmap, missing configuration options ($badconfig)" >&2

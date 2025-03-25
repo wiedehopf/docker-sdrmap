@@ -2,7 +2,7 @@
 # shellcheck shell=bash disable=SC1091,SC2076
 
 source /scripts/common
-mkdir -p /run/readsb
+mkdir -p /run/mlat-hub
 
 s6wrap=(s6wrap --quiet --prepend="$(basename "$0")" --timestamps --args)
 
@@ -27,52 +27,20 @@ elif [ -n "${READSB_LON}" ]; then
     READSB_CMD+=(--lon "${READSB_LON}")
 fi
 
-READSB_CMD+=("--write-json=/run/readsb")
+READSB_CMD+=("--write-json=/run/mlat-hub")
 # no need to write state when tar1090_disable is used for a minimal setup
 
 READSB_CMD+=("--json-reliable=1")
+READSB_CMD+=("--forward-mlat")
 
 # READSB_CMD+=("--net-ri-port=30001")
 # READSB_CMD+=("--net-ro-port=30002")
 # READSB_CMD+=("--net-sbs-port=30003")
-# READSB_CMD+=("--net-bi-port=30004,30104")
-READSB_CMD+=("--net-bo-port=30005")
+READSB_CMD+=("--net-bi-port=30104")
+READSB_CMD+=("--net-bo-port=30105")
 # READSB_CMD+=("--net-beast-reduce-out-port=30006")
 # READSB_CMD+=("--net-json-port=30047")
 
-READSB_CMD+=(--net-sbs-in-port=32006)
-
-
-READSB_CMD+=("--net-connector=${BEASTHOST},${BEASTPORT},beast_in")
-
-if [[ -n "$READSB_RX_LOCATION_ACCURACY" ]]; then
-    READSB_CMD+=("--json-location-accuracy=$READSB_RX_LOCATION_ACCURACY")
-fi
-
-if [[ -n "$READSB_JSON_INTERVAL" ]]; then
-    READSB_CMD+=("--write-json-every=$READSB_JSON_INTERVAL")
-fi
-
-if [ -n "${READSB_DEBUG}" ]; then
-    READSB_CMD+=("--debug=$READSB_DEBUG")
-fi
-
-# Handle --write-state-only-on-exit
-if chk_enabled "${READSB_WRITE_STATE_ONLY_ON_EXIT}"; then
-    READSB_CMD+=("--write-state-only-on-exit")
-fi
-
-# Handle "--max-range=<dist>"
-if [[ -n "$READSB_MAX_RANGE" ]]; then
-    READSB_CMD+=("--max-range=$READSB_MAX_RANGE")
-fi
-
-READSB_CMD+=("--mlat")
-
-# Handle "--modeac"
-if chk_enabled "$READSB_MODEAC"; then
-    READSB_CMD+=("--modeac")
-fi
 
 # shellcheck disable=SC2086
 exec "${s6wrap[@]}" "${READSB_BIN}" "${READSB_CMD[@]}" $READSB_EXTRA_ARGS
