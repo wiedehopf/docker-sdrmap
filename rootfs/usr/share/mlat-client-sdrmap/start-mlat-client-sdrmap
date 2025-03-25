@@ -8,7 +8,7 @@
 
 source /scripts/common
 
-if ! chk_enabled MLAT; then
+if ! chk_enabled "$MLAT"; then
   echo "MLAT is disabled, not starting mlat-client-sdrmap" >&2
   sleep infinity
 fi
