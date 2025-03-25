@@ -58,7 +58,7 @@ while true; do
 	# fi;
 
 
-	gzip -c $ADSBPATH | curl -s -u "$SMUSERNAME":"$SMPASSWORD" -X POST -H "Content-type: application/json" -H "Content-encoding: gzip" --data-binary @- https://adsb.feed.sdrmap.org/index.php
+	gzip -c $ADSBPATH | curl -sS -u "$SMUSERNAME":"$SMPASSWORD" -X POST -H "Content-type: application/json" -H "Content-encoding: gzip" --data-binary @- https://adsb.feed.sdrmap.org/index.php
 
 	# if [ "$radiosonde" = "true" ] && [ $(($(date +"%s") - $radiosondelastrun)) -ge "$radiosondeinterval" ];
 	# 	then
