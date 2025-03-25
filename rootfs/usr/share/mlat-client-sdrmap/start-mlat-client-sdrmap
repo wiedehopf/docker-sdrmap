@@ -85,4 +85,4 @@ if [[ "$SERVER_USER" != *:* ]]; then
 fi
 
 echo "Starting mlat-client-sdrmap with $ARGS"
-exec "${s6wrap[@]}" /usr/bin/mlat-client "$ARGS"
+/usr/bin/mlat-client "$ARGS"
