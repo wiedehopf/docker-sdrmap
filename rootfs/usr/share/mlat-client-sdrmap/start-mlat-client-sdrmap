@@ -8,6 +8,11 @@
 
 source /scripts/common
 
+if ! chk_enabled MLAT; then
+  echo "MLAT is disabled, not starting mlat-client-sdrmap" >&2
+  sleep infinity
+fi
+
 # get the username from $SMUSERNAME. If SMUSERNAME is unset OR yourusername is the value, set USERNAME to blank
 
 if [ -z "$SMUSERNAME" ] || [ "$SMUSERNAME" = "yourusername" ]; then
@@ -64,7 +69,7 @@ ARGS+=("--alt" "$ALT")
 ARGS+=("--input-type" "$INPUT_TYPE")
 ARGS+=("--input-connect" "$INPUT_HOSTPORT")
 ARGS+=("--server" "$SERVER_HOSTPORT")
-ARGS+=("--results" "127.0.0.1:30104")
+ARGS+=("--results" "beast,listen,30105")
 
 if [ -n "$badconfig" ]; then
 	echo "Not starting mlat-client-sdrmap, missing configuration options ($badconfig)" >&2

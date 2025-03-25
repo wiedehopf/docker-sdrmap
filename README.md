@@ -39,6 +39,7 @@ There are a series of available environment variables:
 | `READSB_LON`         | Required. Longitude of the antenna                                                    |                |
 | `ALT`                | For MLAT set the altitude in **_meters_**. No trailing `m` or other values necessary. | Unset          |
 | `TZ`                 | Optional. Your local timezone                                                         | GMT            |
+| `MLAT`               | Optional. Enable MLAT (true/false)                                                    | false          |
 
 ## Ports
 
