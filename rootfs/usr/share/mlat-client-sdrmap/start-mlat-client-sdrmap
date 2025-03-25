@@ -49,9 +49,6 @@ SERVER_HOSTPORT="127.0.0.1:3333"
 # # the --results option (see mlat-client --help for syntax)
 # RESULTS="beast,connect,127.0.0.1:30004"
 
-# Other arguments to pass to mlat-client
-MLAT_EXTRA_ARGS=""
-
 # sanitize missing settings
 badconfig=""
 [ -z "$RUN_AS_USER" ] && RUN_AS_USER="missing-RUN_AS_USER-setting-in-config"
@@ -63,16 +60,14 @@ badconfig=""
 [ -z "$INPUT_HOSTPORT" ] && badconfig="$badconfig INPUT_HOSTPORT"
 [ -z "$SERVER_HOSTPORT" ] && badconfig="$badconfig SERVER_HOSTPORT"
 
-ARGS="--user $SERVER_USER --lat $READSB_LAT --lon $READSB_LON --alt $ALT --input-type $INPUT_TYPE --input-connect $INPUT_HOSTPORT --server $SERVER_HOSTPORT"
-
-for r in $RESULTS
-do
-	if [ "$r" != "none" ]; then
-		ARGS="$ARGS --results $r"
-	fi
-done
-
-ARGS="$ARGS $MLAT_EXTRA_ARGS"
+ARGS=()
+ARGS+=("--user" "$SERVER_USER")
+ARGS+=("--lat" "$READSB_LAT")
+ARGS+=("--lon" "$READSB_LON")
+ARGS+=("--alt" "$ALT")
+ARGS+=("--input-type" "$INPUT_TYPE")
+ARGS+=("--input-connect" "$INPUT_HOSTPORT")
+ARGS+=("--server" "$SERVER_HOSTPORT")
 
 if [ -n "$badconfig" ]; then
 	echo "Not starting mlat-client-sdrmap, missing configuration options ($badconfig)" >&2
@@ -84,5 +79,5 @@ if [[ "$SERVER_USER" != *:* ]]; then
 	exit 64
 fi
 
-echo "Starting mlat-client-sdrmap with $ARGS"
-exec "${s6wrap[@]}" /usr/bin/mlat-client "$ARGS"
+echo "Starting mlat-client-sdrmap with ${ARGS[*]}"
+exec "${s6wrap[@]}" /usr/bin/mlat-client "${ARGS[@]}"
