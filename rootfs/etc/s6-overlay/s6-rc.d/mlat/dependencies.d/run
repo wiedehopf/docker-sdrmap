@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/share/mlat-client-sdrmap/start-mlat-client-sdrmap
