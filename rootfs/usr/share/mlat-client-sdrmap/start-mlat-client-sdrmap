@@ -8,9 +8,6 @@
 
 source /scripts/common
 
-# System user to run as.
-RUN_AS_USER="mlat-client-sdrmap"
-
 # get the username from $SMUSERNAME. If SMUSERNAME is unset OR yourusername is the value, set USERNAME to blank
 
 if [ -z "$SMUSERNAME" ] || [ "$SMUSERNAME" = "yourusername" ]; then
@@ -51,7 +48,6 @@ SERVER_HOSTPORT="127.0.0.1:3333"
 
 # sanitize missing settings
 badconfig=""
-[ -z "$RUN_AS_USER" ] && RUN_AS_USER="missing-RUN_AS_USER-setting-in-config"
 [ -z "$SERVER_USER" ] && badconfig="$badconfig SERVER_USER"
 [ -z "$READSB_LAT" ] && badconfig="$badconfig READSB_LAT"
 [ -z "$READSB_LON" ] && badconfig="$badconfig READSB_LON"
