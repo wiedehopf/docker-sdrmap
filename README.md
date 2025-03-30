@@ -18,9 +18,9 @@ services:
     restart: always
     environment:
       - TZ=Australia/Perth
-      - BEASTHOST=readsb
-      - READSB_LAT=-33.33333
-      - READSB_LON=111.11111
+      - BEASTHOST=ultrafeeder
+      - LAT=-33.33333
+      - LON=111.11111
       - SMUSERNAME=yourusername
       - SMPASSWORD=yourpassword
     tmpfs:
@@ -47,8 +47,8 @@ There are a series of available environment variables:
 | `BEASTPORT`          | Optional. TCP port number of Mode-S/BEAST provider (dump1090/readsy)                  | 30005          |
 | `SMUSERNAME`         | Required. SDR Map                                                                     | `yourusername` |
 | `SMPASSWORD`         | Required. SDR Map Password                                                            | `yourpassword` |
-| `READSB_LAT`         | Required. Latitude of the antenna                                                     |                |
-| `READSB_LON`         | Required. Longitude of the antenna                                                    |                |
+| `LAT`                | Required. Latitude of the antenna                                                     |                |
+| `LON`                | Required. Longitude of the antenna                                                    |                |
 | `ALT`                | For MLAT set the altitude in **_meters_**. No trailing `m` or other values necessary. | Unset          |
 | `TZ`                 | Optional. Your local timezone                                                         | GMT            |
 | `MLAT`               | Optional. Enable MLAT (true/false)                                                    | false          |

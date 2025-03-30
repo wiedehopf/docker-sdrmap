@@ -54,8 +54,8 @@ SERVER_HOSTPORT="127.0.0.1:3333"
 # sanitize missing settings
 badconfig=""
 [ -z "$SERVER_USER" ] && badconfig="$badconfig SERVER_USER"
-[ -z "$READSB_LAT" ] && badconfig="$badconfig READSB_LAT"
-[ -z "$READSB_LON" ] && badconfig="$badconfig READSB_LON"
+[ -z "$LAT" ] && badconfig="$badconfig LAT"
+[ -z "$LON" ] && badconfig="$badconfig LON"
 [ -z "$ALT" ] && badconfig="$badconfig ALT"
 [ -z "$INPUT_TYPE" ] && INPUT_TYPE=dump1090
 [ -z "$INPUT_HOSTPORT" ] && badconfig="$badconfig INPUT_HOSTPORT"
