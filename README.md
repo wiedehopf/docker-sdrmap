@@ -23,6 +23,8 @@ services:
       - READSB_LON=111.11111
       - SMUSERNAME=yourusername
       - SMPASSWORD=yourpassword
+    tmpfs:
+        -/run:exec
 ```
 
 ## MLAT
