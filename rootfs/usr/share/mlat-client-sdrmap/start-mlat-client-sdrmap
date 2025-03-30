@@ -72,6 +72,10 @@ ARGS+=("--server" "$SERVER_HOSTPORT")
 ARGS+=("--results" "beast,listen,30105")
 ARGS+=("--stats-json" "/run/mlat-client-stats.json")
 
+if [[ -n "$MLAT_RESULTS" ]]; then
+    ARGS+=("--results" "$MLAT_RESULTS")
+fi
+
 if [ -n "$badconfig" ]; then
 	echo "Not starting mlat-client-sdrmap, missing configuration options ($badconfig)" >&2
 	sleep infinity
