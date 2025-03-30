@@ -70,6 +70,7 @@ ARGS+=("--input-type" "$INPUT_TYPE")
 ARGS+=("--input-connect" "$INPUT_HOSTPORT")
 ARGS+=("--server" "$SERVER_HOSTPORT")
 ARGS+=("--results" "beast,listen,30105")
+ARGS+=("--stats" "/run/mlat-client-stats.json")
 
 if [ -n "$badconfig" ]; then
 	echo "Not starting mlat-client-sdrmap, missing configuration options ($badconfig)" >&2
