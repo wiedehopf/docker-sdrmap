@@ -63,8 +63,8 @@ badconfig=""
 
 ARGS=()
 ARGS+=("--user" "$SERVER_USER")
-ARGS+=("--lat" "$READSB_LAT")
-ARGS+=("--lon" "$READSB_LON")
+ARGS+=("--lat" "$LAT")
+ARGS+=("--lon" "$LON")
 ARGS+=("--alt" "$ALT")
 ARGS+=("--input-type" "$INPUT_TYPE")
 ARGS+=("--input-connect" "$INPUT_HOSTPORT")
