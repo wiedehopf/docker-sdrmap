@@ -27,6 +27,7 @@ RUN set -x && \
     # Clean-up.
     apt-get autoremove -q -o APT::Autoremove::RecommendsImportant=0 -o APT::Autoremove::SuggestsImportant=0 -y "${TEMP_PACKAGES[@]}" && \
     apt-get clean -q -y && \
+    bash /scripts/clean-build.sh && \
     rm -rf /src/* /tmp/* /var/lib/apt/lists/* /var/cache/*
 
 COPY rootfs/ /
