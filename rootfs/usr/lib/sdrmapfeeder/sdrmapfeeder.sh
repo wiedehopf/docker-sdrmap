@@ -63,6 +63,8 @@ while true; do
 		touch /run/feed_ok
 	else
 		rm -f /run/feed_ok
+        # sleep a bit if this fails, no need to hammer the server if this doesn't work
+        sleep 4
 	fi
 
 	# if [ "$radiosonde" = "true" ] && [ $(($(date +"%s") - $radiosondelastrun)) -ge "$radiosondeinterval" ];
