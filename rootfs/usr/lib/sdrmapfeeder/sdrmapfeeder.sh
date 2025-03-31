@@ -1,5 +1,5 @@
 #!/command/with-contenv bash
-# shellcheck shell=bash disable=SC1091,SC2076
+# shellcheck shell=bash disable=SC1091,SC2076,SC2268,SC2155,SC2268
 export LANG=C.UTF-8
 
 source /scripts/common
@@ -36,13 +36,6 @@ DNS_TTL=600
 
 declare -A DNS_LOOKUP
 declare -A DNS_EXPIRE
-
-# Let's FIRST make sure our version of curl will support what we need (--resolve arg)
-CURL_VER=$( curl -V | head -1 | awk '{print $2}' )
-if [ "x$CURL_VER" = "x" ]; then
-	echo "FATAL - curl is malfunctioning, can't get version info."
-	exit 11
-fi
 
 # This routine assumes you do no santiy-checking.
 #
