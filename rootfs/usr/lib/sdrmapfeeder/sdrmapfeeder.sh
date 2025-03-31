@@ -58,7 +58,7 @@ while true; do
 	# fi;
 
 
-	if gzip -c $ADSBPATH | curl -sS -u "$SMUSERNAME":"$SMPASSWORD" -X POST -H "Content-type: application/json" -H "Content-encoding: gzip" --data-binary @- https://adsb.feed.sdrmap.org/index.php
+	if gzip -c $ADSBPATH | curl --fail-with-body -sS -u "$SMUSERNAME":"$SMPASSWORD" -X POST -H "Content-type: application/json" -H "Content-encoding: gzip" --data-binary @- https://adsb.feed.sdrmap.org/index.php
 	then
 		touch /run/feed_ok
 	else
