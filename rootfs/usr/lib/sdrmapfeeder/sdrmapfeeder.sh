@@ -1,5 +1,5 @@
 #!/command/with-contenv bash
-# shellcheck shell=bash disable=SC1091,SC2076,SC2268,SC2155,SC2268
+# shellcheck shell=bash disable=SC1091,SC2076,SC2268,SC2155,SC2086
 export LANG=C.UTF-8
 
 source /scripts/common
