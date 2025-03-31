@@ -10,15 +10,15 @@ NOCOLOR='\033[0m'
 
 # Check to make sure the correct command line arguments have been set
 EXITCODE=0
-if [ -z "${BEASTHOST}" ] && [ -z "${MLATHOST}" ] && [ -z "${READSB_DEVICE_TYPE}" ] && [ -z "${READSB_NET_CONNECTOR}" ] \
-       && ! grep -qs -e 'adsb[^;]*_in' <<< "${ULTRAFEEDER_CONFIG}${ULTRAFEEDER_NET_CONNECTOR}"; then
-  echo -e "${YELLOW}WARNING: No obvious data input configured: BEASTHOST / MLATHOST / READSB_NET_CONNECTOR / READSB_DEVICE_TYPE environment variables not set${NOCOLOR}"
+if [ -z "${BEASTHOST}" ]; then
+  echo -e "${YELLOW}WARNING: No data input configured: BEASTHOST environment variables not set${NOCOLOR}"
+  EXITCODE=1
 fi
-if [ -z "${LAT}" ] && [ -z "${READSB_LAT}" ]; then
-  echo -e "${YELLOW}WARNING: LAT / READSB_LAT environment variable not set, Home location will not be accurate${NOCOLOR}"
+if [ -z "${LAT}" ]; then
+  echo -e "${YELLOW}WARNING: LAT environment variable not set, Home location will not be accurate${NOCOLOR}"
 fi
-if [ -z "${LONG}" ] && [ -z "${READSB_LON}" ]; then
-  echo -e "${YELLOW}WARNING: LONG / READSB_LON environment variable not set, Home location will not be accurate${NOCOLOR}"
+if [ -z "${LON}" ]; then
+  echo -e "${YELLOW}WARNING: LON environment variable not set, Home location will not be accurate${NOCOLOR}"
 fi
 if [ $EXITCODE -ne 0 ]; then
   exit 1

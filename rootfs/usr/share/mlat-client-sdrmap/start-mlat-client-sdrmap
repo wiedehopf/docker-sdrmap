@@ -54,8 +54,8 @@ SERVER_HOSTPORT="127.0.0.1:3333"
 # sanitize missing settings
 badconfig=""
 [ -z "$SERVER_USER" ] && badconfig="$badconfig SERVER_USER"
-[ -z "$READSB_LAT" ] && badconfig="$badconfig READSB_LAT"
-[ -z "$READSB_LON" ] && badconfig="$badconfig READSB_LON"
+[ -z "$LAT" ] && badconfig="$badconfig LAT"
+[ -z "$LON" ] && badconfig="$badconfig LON"
 [ -z "$ALT" ] && badconfig="$badconfig ALT"
 [ -z "$INPUT_TYPE" ] && INPUT_TYPE=dump1090
 [ -z "$INPUT_HOSTPORT" ] && badconfig="$badconfig INPUT_HOSTPORT"
@@ -63,13 +63,18 @@ badconfig=""
 
 ARGS=()
 ARGS+=("--user" "$SERVER_USER")
-ARGS+=("--lat" "$READSB_LAT")
-ARGS+=("--lon" "$READSB_LON")
+ARGS+=("--lat" "$LAT")
+ARGS+=("--lon" "$LON")
 ARGS+=("--alt" "$ALT")
 ARGS+=("--input-type" "$INPUT_TYPE")
 ARGS+=("--input-connect" "$INPUT_HOSTPORT")
 ARGS+=("--server" "$SERVER_HOSTPORT")
 ARGS+=("--results" "beast,listen,30105")
+ARGS+=("--stats-json" "/run/mlat-client-stats.json")
+
+if [[ -n "$MLAT_RESULTS" ]]; then
+    ARGS+=("--results" "$MLAT_RESULTS")
+fi
 
 if [ -n "$badconfig" ]; then
 	echo "Not starting mlat-client-sdrmap, missing configuration options ($badconfig)" >&2
