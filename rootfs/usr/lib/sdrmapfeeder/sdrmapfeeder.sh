@@ -152,7 +152,7 @@ while sleep 1; do
 
 
 	if gzip -c $ADSBPATH | curl --fail-with-body -sS -u "$SMUSERNAME":"$SMPASSWORD" -X POST \
-		$CURL_EXTRA -H "Content-type: application/json" -H "Content-encoding: gzip" \
+		$CURL_EXTRA --max-time 10 -H "Content-type: application/json" -H "Content-encoding: gzip" \
 		--data-binary @- "$REMOTE_URL"
 	then
 		touch /run/feed_ok
