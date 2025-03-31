@@ -1,19 +1,21 @@
+
 FROM ghcr.io/sdr-enthusiasts/docker-baseimage:mlatclient AS buildimage
 
 SHELL ["/bin/bash", "-x", "-o", "pipefail", "-c"]
+# hadolint ignore=DL3008
 RUN \
     apt-get update -q -y && \
     apt-get install -o Dpkg::Options::="--force-confnew" -y --no-install-recommends -q \
     libssl-dev && \
     folder="stunnel-5.74" && \
     archive="${folder}.tar.gz" && \
-    wget "https://www.stunnel.org/downloads/archive/5.x/$archive" && \
+    wget -q "https://www.stunnel.org/downloads/archive/5.x/$archive" && \
     tar xf "$archive" && \
     pushd "$folder" && \
     ./configure --prefix=/usr \
-        --sysconfdir=/etc \
-        --localstatedir=/var \
-        --disable-systemd && \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --disable-systemd && \
     make -j4 && \
     cp src/stunnel /
 
