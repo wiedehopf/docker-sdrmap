@@ -1,2 +1,2 @@
 #!/bin/sh
-exec /usr/lib/sdrmapfeeder/sdrmapfeeder.sh
+exec /etc/s6-overlay/scripts/sdrmap
