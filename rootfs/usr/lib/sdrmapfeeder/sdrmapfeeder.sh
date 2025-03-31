@@ -11,7 +11,9 @@ ADSBPATH="/run/readsb/aircraft.json"
 # radiosondelastrun=0
 
 # wait for readsb to be ready
-sleep 5
+while ! [[ -f "$ADSBPATH" ]]; do
+    sleep 1
+done
 
 
 if [[ -z $SMUSERNAME ]] || [[ -z $SMPASSWORD ]] || [[ $SMUSERNAME == "yourusername" ]] || [[ $SMPASSWORD == "yourpassword" ]]; then
@@ -19,7 +21,7 @@ if [[ -z $SMUSERNAME ]] || [[ -z $SMPASSWORD ]] || [[ $SMUSERNAME == "youruserna
 	sleep infinity
 fi
 
-while true; do
+while sleep 1; do
 	# if [ "$sysinfo" = "true" ] && [ $(($(date +"%s") - $sysinfolastrun)) -ge "$sysinfointerval" ];
 	# 	then
 	# 	sysinfolastrun=$(date +"%s")
@@ -79,6 +81,4 @@ while true; do
 	# 		tail -n 1 $i | gzip | curl -s -u $username:$password -X POST -H "Content-type: application/json" -H "Content-encoding: gzip" --data-binary @- https://radiosonde.feed.sdrmap.org/index.php
 	# 	done;
 	# fi;
-
-	sleep 1;
 done;
