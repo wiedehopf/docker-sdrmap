@@ -24,7 +24,7 @@ services:
       - SMUSERNAME=yourusername
       - SMPASSWORD=yourpassword
     tmpfs:
-        -/run:exec
+      - /run:exec
 ```
 
 ## MLAT

@@ -14,6 +14,7 @@ READSB_CMD+=("--quiet")
 READSB_CMD+=("--write-json=/run/readsb")
 READSB_CMD+=("--net-connector=${BEASTHOST},${BEASTPORT},beast_in")
 READSB_CMD+=("--net-bo-port=30005")
+READSB_CMD+=("--net-bi-port=30104")
 
 if [ -n "${LAT}" ]; then
     READSB_CMD+=(--lat "${LAT}")
