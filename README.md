@@ -33,26 +33,32 @@ If you want to enable MLAT, you need to set the `MLAT` environment variable to `
 
 You will want to send mlat results to ultrafeeder using this environment variable:
 
+```yaml
+- MLAT_RESULTS=beast,connect,ultrafeeder:31004
 ```
-MLAT_RESULTS=beast,connect,ultrafeeder:31004
-```
+
+### MLAT Privacy
+
+> [!WARNING]
+> By default your station will not shown on the SDR Map website. If you want, you can set `MLAT_PRIVACY` to `false` and the position will be shown. The station position is fuzzed, slightly, due to rounding of your position's latitude/longitude, but it's still possible your station can be uncomfortably close to your actual position.
 
 ## Runtime Environment Variables
 
 There are a series of available environment variables:
 
-| Environment Variable | Purpose                                                                               | Default        |
-| -------------------- | ------------------------------------------------------------------------------------- | -------------- |
-| `BEASTHOST`          | Required. IP/Hostname of a Mode-S/BEAST provider (dump1090/readsb)                    |                |
-| `BEASTPORT`          | Optional. TCP port number of Mode-S/BEAST provider (dump1090/readsy)                  | 30005          |
-| `SMUSERNAME`         | Required. SDR Map                                                                     | `yourusername` |
-| `SMPASSWORD`         | Required. SDR Map Password                                                            | `yourpassword` |
-| `LAT`                | Required. Latitude of the antenna                                                     |                |
-| `LON`                | Required. Longitude of the antenna                                                    |                |
-| `ALT`                | For MLAT set the altitude in **_meters_**. No trailing `m` or other values necessary. | Unset          |
-| `TZ`                 | Optional. Your local timezone                                                         | GMT            |
-| `MLAT`               | Optional. Enable MLAT (true/false)                                                    | false          |
-| `MLAT_RESULTS`       | Optional. Add --results output to mlat-client (example: beast,connect,ultrafeeder:31004)| false          |
+| Environment Variable | Purpose                                                                                  | Default        |
+| -------------------- | ---------------------------------------------------------------------------------------- | -------------- |
+| `BEASTHOST`          | Required. IP/Hostname of a Mode-S/BEAST provider (dump1090/readsb)                       |                |
+| `BEASTPORT`          | Optional. TCP port number of Mode-S/BEAST provider (dump1090/readsy)                     | 30005          |
+| `SMUSERNAME`         | Required. SDR Map                                                                        | `yourusername` |
+| `SMPASSWORD`         | Required. SDR Map Password                                                               | `yourpassword` |
+| `LAT`                | Required. Latitude of the antenna                                                        |                |
+| `LON`                | Required. Longitude of the antenna                                                       |                |
+| `ALT`                | For MLAT set the altitude in **_meters_**. No trailing `m` or other values necessary.    | Unset          |
+| `TZ`                 | Optional. Your local timezone                                                            | GMT            |
+| `MLAT`               | Optional. Enable MLAT (true/false)                                                       | false          |
+| `MLAT_RESULTS`       | Optional. Add --results output to mlat-client (example: beast,connect,ultrafeeder:31004) | false          |
+| `MLAT_PRIVACY`       | Optional. Set to false to show your station on the SDR Map website                       | true           |
 
 ## Ports
 
