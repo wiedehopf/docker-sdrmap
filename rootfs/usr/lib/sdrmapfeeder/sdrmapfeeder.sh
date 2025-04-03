@@ -6,8 +6,8 @@ source /scripts/common
 
 ADSBPATH="/run/readsb/aircraft.json"
 
-# version='4.0'
-# sysinfolastrun=0
+version='4.0-sdre-docker'
+sysinfolastrun=0
 # radiosondelastrun=0
 
 # wait for readsb to be ready
@@ -22,7 +22,9 @@ if [[ -z $SMUSERNAME ]] || [[ -z $SMPASSWORD ]] || [[ $SMUSERNAME == "youruserna
 fi
 
 REMOTE_URL="https://adsb.feed.sdrmap.org/index.php"
-REMOTE_HOST=$( echo $REMOTE_URL | awk -F'/' '{print $3}' )
+REMOTE_HOST="$(awk -F'/' '{print $3}' <<< "$REMOTE_URL")"
+
+REMOTE_SYS_URL="https://sys.feed.sdrmap.org/index.php"
 
 #####################
 #  DNS cache setup  #
@@ -56,7 +58,7 @@ dns_lookup () {
 	local NOW=$( date +%s )
 
 	# You need to pass in a hostname :)
-	if [ "x$HOST" = "x" ]; then
+	if [[ "x$HOST" = "x" ]]; then
 		echo "ERROR: dns_lookup called without a hostname" >&2
 		return 10
 	fi
@@ -68,8 +70,8 @@ dns_lookup () {
 	fi
 
 	# If the host is cached, and the TTL hasn't expired, return the cached data.
-	if [ ${DNS_LOOKUP[$HOST]} ]; then
-		if [ ${DNS_EXPIRE[$HOST]} -ge $NOW ]; then
+	if [[ ${DNS_LOOKUP[$HOST]} ]]; then
+		if [[ ${DNS_EXPIRE[$HOST]} -ge $NOW ]]; then
 			return 0
 		fi
 	fi
@@ -80,7 +82,7 @@ dns_lookup () {
 	HOST_IP=$( host -v -W $DNS_WAIT -t a "$HOST" | perl -ne 'if (/^Trying "(.*)"/){$h=$1; next;} if (/\.\s+(\d+)\s+IN\s+A\s+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/) {$i=$2; last}; END {printf("%s", $i);}' )
 	RV=$?
 	# If this is empty, something failed.  Sleep some and try again...
-	if [ $RV -ne 0 ] || [ "x$HOST_IP" == "x" ]; then
+	if [[ $RV -ne 0 ]] || [[ "x$HOST_IP" == "x" ]]; then
 		if ping -c1 "$HOST" &>/dev/null && ! host -v -W $DNS_WAIT -t a "$HOST" &>/dev/null; then
 			echo "host not working but ping is, disabling DNS caching!"
 			DNS_CACHE=0
@@ -97,51 +99,20 @@ dns_lookup () {
 	return 0
 }
 
-while sleep 1; do
-	# if [ "$sysinfo" = "true" ] && [ $(($(date +"%s") - $sysinfolastrun)) -ge "$sysinfointerval" ];
-	# 	then
-	# 	sysinfolastrun=$(date +"%s")
-	# echo "{\
-	# 	\"cpu\":{\
-	# 		\"model\":\"$(cat /proc/cpuinfo |grep 'model name'|tail -n 1|cut -d ':' -f 2)\",\
-	# 		\"cores\":\"$(cat /proc/cpuinfo |grep -c -e '^processor')\",\
-	# 		\"load\":\"$(cat /proc/loadavg |cut -d ' ' -f 1)\",\
-	# 		\"temp\":\"$(($(cat /sys/class/thermal/thermal_zone*/temp 2>/dev/null |sort -n|tail -n 1)/1000))\",\
-	# 		\"throttled\":\"$(vcgencmd get_throttled 2>/dev/null |cut -d '=' -f 2 )\"\
-	# 	},\
-	# 	\"memory\":{\
-	# 		\"total\":\"$(cat /proc/meminfo |grep 'MemTotal:'|cut -d ':' -f 2|awk '{$1=$1};1')\",\
-	# 		\"free\":\"$(cat /proc/meminfo |grep 'MemFree:'|cut -d ':' -f 2|awk '{$1=$1};1')\",\
-	# 		\"available\":\"$(cat /proc/meminfo |grep 'MemAvailable:'|cut -d ':' -f 2|awk '{$1=$1};1')\"\
-	# 	},\
-	# 	\"uptime\":\"$(cat /proc/uptime |cut -d ' ' -f 1)\",\
-	# 	\"os\":{\
-	# 		\"kernel\":\"$(uname -r)\"\
-	# 	},\
-	# 	\"packages\":{\
-	# 		\"c2isrepo\":\"$(cat /etc/apt/sources.list.d/*|grep -c 'https://repo.chaos-consulting.de')\",\
-	# 		\"sdrmaprepo\":\"$(cat /etc/apt/sources.list.d/*|grep -c 'https://repo.sdrmap.org')\",\
-	# 		\"mlat-client-c2is\":\"$(dpkg -s mlat-client-c2is 2>&1|grep 'Version:'|cut -d ' ' -f 2)\",\
-	# 		\"mlat-client-sdrmap\":\"$(dpkg -s mlat-client-sdrmap 2>&1|grep 'Version:'|cut -d ' ' -f 2)\",\
-	# 		\"stunnel4\":\"$(dpkg -s stunnel4 2>&1|grep 'Version:'|cut -d ' ' -f 2)\",\
-	# 		\"dump1090-mutability\":\"$(dpkg -s dump1090-mutability 2>&1|grep 'Version:'|cut -d ' ' -f 2)\",\
-	# 		\"dump1090-fa\":\"$(dpkg -s dump1090-fa 2>&1|grep 'Version:'|cut -d ' ' -f 2)\",\
-	# 		\"ais-catcher\":\"$(dpkg -s ais-catcher 2>&1 |grep 'Version:'|cut -d ' ' -f 2)\"\
-	# 	},\
-	# 	\"feeder\":{\
-	# 		\"version\":\"$version\",\
-	# 		\"interval\":\"$sysinfointerval\"
-	# 	}\
-	# }"| gzip -c |curl -s -u $username:$password -X POST -H "Content-type: application/json" -H "Content-encoding: gzip" --data-binary @- https://sys.feed.sdrmap.org/index.php
-	# fi;
-	#
+if ! (( ADSB_INTERVAL >= 1 )); then
+    ADSB_INTERVAL=1
+fi
+if ! (( SYSINFO_INTERVAL >= 30 )); then
+    SYSINFO_INTERVAL=30
+fi
 
+while sleep "$ADSB_INTERVAL"; do
 	CURL_EXTRA=""
 	# If DNS_CACHE is set, use the builtin cache (and correspondingly the additional curl arg
-	if [ $DNS_CACHE -ne 0 ]; then
+	if [[ $DNS_CACHE -ne 0 ]]; then
 		dns_lookup $REMOTE_HOST
 		RV=$?
-		if [ $RV -ne 0 ]; then
+		if [[ $RV -ne 0 ]]; then
 			# Some sort of error...  We'll fall back to normal curl usage, but sleep a little.
 			echo "DNS Error for ${REMOTE_HOST}, fallback ..."
 		else
@@ -150,6 +121,49 @@ while sleep 1; do
 		fi
 	fi
 
+	if chk_enabled "$SEND_SYSINFO" && (( $(date +"%s") - sysinfolastrun >= SYSINFO_INTERVAL )); then
+		sysinfolastrun=$(date +"%s")
+		echo "{\
+			\"cpu\":{\
+				\"model\":\"$(grep 'model name' /proc/cpuinfo |tail -n 1|cut -d ':' -f 2)\",\
+				\"cores\":\"$(grep -c -e '^processor' /proc/cpuinfo)\",\
+				\"load\":\"$(cut -d ' ' -f 1 < /proc/loadavg)\",\
+				\"temp\":\"$(( $(cat /sys/class/thermal/thermal_zone*/temp 2>/dev/null |sort -n|tail -n 1) / 1000 ))\",\
+				\"throttled\":\"$(vcgencmd get_throttled 2>/dev/null |cut -d '=' -f 2 )\"\
+			},\
+			\"memory\":{\
+				\"total\":\"$(grep 'MemTotal:' /proc/meminfo | cut -d ':' -f 2 | awk '{$1=$1};1')\",\
+				\"free\":\"$(grep 'MemFree:' /proc/meminfo | cut -d ':' -f 2 | awk '{$1=$1};1')\",\
+				\"available\":\"$(grep 'MemAvailable:' /proc/meminfo| cut -d ':' -f 2 | awk '{$1=$1};1')\"\
+			},\
+			\"uptime\":\"$(cut -d ' ' -f 1 < /proc/uptime)\",\
+			\"os\":{\
+				\"kernel\":\"$(uname -r)\"\
+			},\
+			\"packages\":{\
+				\"c2isrepo\":\"$(cat /etc/apt/sources.list.d/* | grep -c 'https://repo.chaos-consulting.de')\",\
+				\"sdrmaprepo\":\"$(cat /etc/apt/sources.list.d/* | grep -c 'https://repo.sdrmap.org')\",\
+				\"mlat-client-c2is\":\"$(grep -o -m 1 'MlatClient==[0-9.]\+' "$(which mlat-client)"| sed 's/MlatClient==//')\",\
+				\"mlat-client-sdrmap\":\"$(grep -o -m 1 'MlatClient==[0-9.]\+' "$(which mlat-client)"| sed 's/MlatClient==//')\",\
+				\"stunnel4\":\"$(stunnel 2>&1 | grep -o -m 1 'stunnel [0-9.]\+'| sed 's/stunnel //')\",\
+				\"dump1090-mutability\":\"$(dpkg -s dump1090-mutability 2>&1|grep 'Version:'|cut -d ' ' -f 2)\",\
+				\"dump1090-fa\":\"$(readsb --version 2>&1 | sed 's/readsb version: \([0-9.]\+\).*/wreadsb-\1/')\",\
+				\"ais-catcher\":\"$(dpkg -s ais-catcher 2>&1 |grep 'Version:'|cut -d ' ' -f 2)\"\
+			},\
+			\"feeder\":{\
+				\"version\":\"$version\",\
+				\"interval\":\"$SYSINFO_INTERVAL\" \
+			}\
+		}" | gzip -c | curl --fail-with-body -sSL \
+										-u "$SMUSERNAME":"$SMPASSWORD" \
+										-X POST \
+										--max-time 10 \
+										-H "Content-type: application/json" \
+										-H "Content-encoding: gzip" \
+										--data-binary @- \
+										"$REMOTE_SYS_URL"
+	fi
+	#
 
 	if gzip -c $ADSBPATH | curl --fail-with-body -sS -u "$SMUSERNAME":"$SMPASSWORD" -X POST \
 		$CURL_EXTRA --max-time 10 -H "Content-type: application/json" -H "Content-encoding: gzip" \
@@ -158,14 +172,12 @@ while sleep 1; do
 		touch /run/feed_ok
 	else
 		rm -f /run/feed_ok
-		# sleep a bit if this fails, no need to hammer the server if this doesn't work
-		sleep 4
 	fi
 
-	# if [ "$radiosonde" = "true" ] && [ $(($(date +"%s") - $radiosondelastrun)) -ge "$radiosondeinterval" ];
+	# if [[ "$radiosonde" = "true" ]] && [[ $(($(date +"%s") - $radiosondelastrun)) -ge "$radiosondeinterval" ]];
 	# 	then
 	# 	radiosondelastrun=$(date +"%s")
-	# 	if [ ! -d "$radiosondepath" ]; then
+	# 	if [[ ! -d "$radiosondepath" ]]; then
 	# 		echo "The log directory '$radiosondepath' doesn't exist."
 	# 		exit 1
 	# 	fi;
