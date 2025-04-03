@@ -72,7 +72,7 @@ There are a series of available environment variables:
 | `LON`                | Required. Longitude of the antenna                                                       |                |
 | `ALT`                | For MLAT set the altitude in **_meters_**. No trailing `m` or other values necessary.    | Unset          |
 | `TZ`                 | Optional. Your local timezone                                                            | GMT            |
-| `MLAT`               | Optional. Enable MLAT (true/false)                                                       | false          |
+| `MLAT`               | Optional. Enable MLAT (true/false)                                                       | true          |
 | `MLAT_RESULTS`       | Optional. Add --results output to mlat-client (example: beast,connect,ultrafeeder:31004) | false          |
 | `MLAT_PRIVACY`       | Optional. Set to true to hide your station on the SDRMap website                        | false          |
 | `SEND_SYSINFO`       | Optional. Set to true to share some system information (CPU, speed, memory use, readsb/mlat-client versions, etc.) with SDRMap. This information may be shown on the SDRMap webpage. | false |
