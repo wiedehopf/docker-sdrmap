@@ -39,4 +39,4 @@ echo "ADSB feeding      : $(if [[ -n "$BEASTHOST" ]]; then echo "Enabled"; else 
 echo "MLAT feeding      : $(if chk_disabled "$MLAT" || [[ -z "$BEASTHOST" ]]; then echo "Disabled"; else echo "Enabled"; fi)"
 echo "RadioSonde feeding: $(if [[ -d /opt/radiosonde ]]; then echo "Enabled"; else echo "Disabled"; fi)"
 echo "Sysinfo feeding   : $(if chk_enabled "$SEND_SYSINFO"; then echo "Enabled"; else echo "Disabled"; fi)"
-echo "Station link      : https://sdrmap.com/?station=${SMUSERNAME}"
+echo "Station link      : https://sdrmap.org/?station=${SMUSERNAME}"
