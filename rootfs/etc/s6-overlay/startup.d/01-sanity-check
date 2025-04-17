@@ -5,7 +5,7 @@ source /scripts/common
 
 # Define colours
 YELLOW='\033[1;33m'
-#LIGHTRED='\033[1;31m'
+RED='\033[1;31m'
 NOCOLOR='\033[0m'
 
 # Check to make sure the correct command line arguments have been set
@@ -18,6 +18,11 @@ if [[ -z "${LAT}" ]]; then
 fi
 if [[ -z "${LON}" ]]; then
   echo -e "${YELLOW}WARNING: LON environment variable not set, Home location will not be accurate${NOCOLOR}"
+fi
+if [[ -z "${SMUSERNAME}" ]] || [[ -z "${SMPASSWORD}" ]] || [[ "${SMUSERNAME}" == "yourusername" ]] || [[ "${SMPASSWORD}" == "yourpassword" ]]; then
+  echo -e "${RED}FATAL: Your username and/or password are not set. Please set SMUSERNAME and SMPASSWORD as docker environment variables.${NOCOLOR}"
+  echo -e "${RED}       Visit https://github.com/sdrmap/docs/wiki/2.1-Feeding for instructions how to obtail credentials.${NOCOLOR}"
+  EXITCODE=1
 fi
 if [[ $EXITCODE -ne 0 ]]; then
   exit 1
@@ -34,3 +39,4 @@ echo "ADSB feeding      : $(if [[ -n "$BEASTHOST" ]]; then echo "Enabled"; else 
 echo "MLAT feeding      : $(if chk_disabled "$MLAT" || [[ -z "$BEASTHOST" ]]; then echo "Disabled"; else echo "Enabled"; fi)"
 echo "RadioSonde feeding: $(if [[ -d /opt/radiosonde ]]; then echo "Enabled"; else echo "Disabled"; fi)"
 echo "Sysinfo feeding   : $(if chk_enabled "$SEND_SYSINFO"; then echo "Enabled"; else echo "Disabled"; fi)"
+echo "Station link      : https://sdrmap.com/?station=${SMUSERNAME}"

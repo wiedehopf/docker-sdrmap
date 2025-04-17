@@ -11,6 +11,10 @@ sysinfolastrun=0
 radiosondelastrun=0
 radiosondepath="/opt/radiosonde"
 
+if [[ -f /.VERSION ]]; then
+		version+="-$(</.VERSION)"
+fi
+
 
 if [[ -z "$SMUSERNAME" ]] || [[ -z "$SMPASSWORD" ]] || [[ "$SMUSERNAME" == "yourusername" ]] || [[ "$SMPASSWORD" == "yourpassword" ]]; then
 	"${s6wrap[@]}" echo "Please edit your credentials."
@@ -138,23 +142,23 @@ while sleep "$ADSB_INTERVAL"; do
 				\"throttled\":\"$(vcgencmd get_throttled 2>/dev/null |cut -d '=' -f 2 )\"\
 			},\
 			\"memory\":{\
-				\"total\":\"$(grep 'MemTotal:' /proc/meminfo | cut -d ':' -f 2 | awk '{$1=$1};1')\",\
-				\"free\":\"$(grep 'MemFree:' /proc/meminfo | cut -d ':' -f 2 | awk '{$1=$1};1')\",\
-				\"available\":\"$(grep 'MemAvailable:' /proc/meminfo| cut -d ':' -f 2 | awk '{$1=$1};1')\"\
+				\"total\":\"$(sed -n 's/^MemTotal:\s*\(.*\)$/\1/p' < /proc/meminfo)\",\
+				\"free\":\"$(sed -n 's/^MemFree:\s*\(.*\)$/\1/p' < /proc/meminfo)\",\
+				\"available\":\"$(sed -n 's/^MemAvailable:\s*\(.*\)$/\1/p' < /proc/meminfo)\"\
 			},\
 			\"uptime\":\"$(cut -d ' ' -f 1 < /proc/uptime)\",\
 			\"os\":{\
 				\"kernel\":\"$(uname -r)\"\
 			},\
 			\"packages\":{\
-				\"c2isrepo\":\"$(cat /etc/apt/sources.list.d/* | grep -c 'https://repo.chaos-consulting.de')\",\
-				\"sdrmaprepo\":\"$(cat /etc/apt/sources.list.d/* | grep -c 'https://repo.sdrmap.org')\",\
-				\"mlat-client-c2is\":\"$(grep -o -m 1 'MlatClient==[0-9.]\+' "$(which mlat-client)"| sed 's/MlatClient==//')\",\
-				\"mlat-client-sdrmap\":\"$(grep -o -m 1 'MlatClient==[0-9.]\+' "$(which mlat-client)"| sed 's/MlatClient==//')\",\
-				\"stunnel4\":\"$(stunnel 2>&1 | grep -o -m 1 'stunnel [0-9.]\+'| sed 's/stunnel //')\",\
-				\"dump1090-mutability\":\"$(dpkg -s dump1090-mutability 2>&1|grep 'Version:'|cut -d ' ' -f 2)\",\
-				\"dump1090-fa\":\"$(readsb --version 2>&1 | sed 's/readsb version: \([0-9.]\+\).*/wreadsb-\1/')\",\
-				\"ais-catcher\":\"$(dpkg -s ais-catcher 2>&1 |grep 'Version:'|cut -d ' ' -f 2)\"\
+				\"c2isrepo\":\"0\",\
+				\"sdrmaprepo\":\"0\",\
+				\"mlat-client-c2is\":\"$(sed -n '/.*MlatClient==\([0-9.]\+\).*/{s//\1/p;q}' "$(which mlat-client)")\",\
+				\"mlat-client-sdrmap\":\"\",\
+				\"stunnel4\":\"$(sed -n '/.*stunnel \([0-9.]\+\).*/{s//\1/p;q}' < <(stunnel 2>&1))\",\
+				\"dump1090-mutability\":\"\",\
+				\"dump1090-fa\":\"$(readsb --version 2>&1 | sed 's/readsb version: \([0-9.]\+\).*/wreadsb-\1/')-docker-$(sed -n 's/.*_(\([0-9a-f]\+\))_\([0-9]\+\)-\([0-9]\+\)-\([0-9]\+\)-\([0-9]\+\):\([0-9]\+\):\(.*\)/\1-\2\3\4-\5\6\7/p' < /.VERSION)\",\
+				\"ais-catcher\":\"\"\
 			},\
 			\"feeder\":{\
 				\"version\":\"$version\",\
