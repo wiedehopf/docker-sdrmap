@@ -57,6 +57,6 @@ jobs:
       build_latest: true
       docker_latest_tag: trixie-latest
       build_baseimage_test: true
-      build_baseimage_url: :wreadsb/:wreadsb-test-pr/g;s/:mlatclient/:mlatclient-test-pr
+      build_baseimage_url: :wreadsb/:trixie-wreadsb/g;s/:mlatclient/:trixie-mlatclient
     secrets:
       ghcr_token: ${{ secrets.GITHUB_TOKEN }}
